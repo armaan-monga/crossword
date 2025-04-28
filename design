@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crossword Puzzle</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .crossword {
+            display: grid;
+            grid-template-columns: repeat(5, 40px);
+            grid-template-rows: repeat(5, 40px);
+            gap: 2px;
+            justify-content: center;
+            margin: 20px auto;
+        }
+        .crossword input {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            font-size: 18px;
+            text-transform: uppercase;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+        .crossword input:disabled {
+            background-color: #000;
+        }
+        .clues {
+            margin: 20px;
+        }
+        .clue {
+            text-align: left;
+            max-width: 300px;
+            margin: 5px auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Crossword Puzzle</h1>
+    <div class="crossword">
+        <!-- Disabled cells for black spaces -->
+        <input type="text" maxlength="1" disabled>
+        <input type="text" maxlength="1" disabled>
+        <input type="text" maxlength="1" disabled>
+        <input type="text" maxlength="1">
+        <input type="text" maxlength="1">
+
+        <input type="text" maxlength="1" disabled>
+        <input type="text" maxlength="1">
+        <input type="text" maxlength="1">
+        <input type="text" maxlength="1" disabled>
+        <input type="text" maxlength="1">
+
+        <input type="text" maxlength="1">
+        <input type="text" maxlength="1">
+        <input type="text" maxlength="1">
+        <input type="text" maxlength="1" disabled>
+        <input type="text" maxlength="1" disabled>
+
+        <input type="text" maxlength="1">
+        <input type="text" maxlength="1" disabled>
+        <input type="text" maxlength="1" disabled>
+        <input type="text" maxlength="1" disabled>
+        <input type="text" maxlength="1">
+
+        <input type="text" maxlength="1" disabled>
+        <input type="text" maxlength="1">
+        <input type="text" maxlength="1">
+        <input type="text" maxlength="1">
+        <input type="text" maxlength="1">
+    </div>
+    <div class="clues">
+        <h2>Clues</h2>
+        <div class="clue"><strong>Across:</strong> 1. A fruit (row 1)</div>
+        <div class="clue"><strong>Down:</strong> 2. Opposite of up (column 2)</div>
+    </div>
+    <script>
+        // Placeholder logic for puzzle
+        console.log("Simple crossword ready.");
+    </script>
+</body>
+</html>
