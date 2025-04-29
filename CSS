@@ -3,13 +3,61 @@
   display: grid;
   grid-template-columns: repeat(10, 40px); /* 10 columns, each 40px wide */
   grid-template-rows: repeat(10, 40px); /* 10 rows, each 40px high */
-  gap: 2px;
+  gap: 2px; /* Space between cells */
   margin: 20px auto;
   width: max-content;
-  border: 2px solid #333;
+  border: 2px solid #333; /* Outer border */
 }
 
 /* Individual cells */
 .cell {
-  width: 40
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #999;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #fff;
+  color: #000;
+  position: relative;
+}
+
+/* Clue numbers in the top-left corner */
+.cell .number {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  font-size: 10px;
+  color: #666;
+}
+
+/* Filled cells (black) */
+.cell.filled {
+  background-color: #333;
+  color: transparent;
+  border: 1px solid #222;
+}
+
+/* Highlight active cells on hover */
+.cell:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+/* Input styling for letters */
+.cell input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: transparent;
+  outline: none;
+  text-transform: uppercase;
+  color: #000;
+  pointer-events: none; /* Remove for editability */
+}
 
