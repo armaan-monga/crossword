@@ -132,47 +132,6 @@
   color: #000;
   pointer-events: none; /* Remove for editability */
 }
-    
-    .cell input {
-      width: 100%;
-      height: 100%;
-      text-align: center;
-      font-size: 20px;
-      text-transform: uppercase;
-      border: none;
-      outline: none;
-    }
-    .cell.blocked {
-      background-color: #000;
-    }
-    .cell-number {
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      font-size: 12px;
-      color: #000;
-    }
-    .clues {
-      margin-top: 20px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .clues h3 {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-    }
-    .clues ul {
-      list-style: none;
-      padding: 0;
-    }
-    .clues li {
-      margin-bottom: 5px;
-    }
-    .buttons {
-      margin-top: 20px;
-      text-align: center;
-    }
   </style>
 </head>
 <body>
