@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crossword Puzzle Game</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --background-gradient: linear-gradient(to bottom right, #f3f4f6, #e5e7eb);
+      --cell-bg: #fff;
+      --cell-border: #ccc;
+      --blocked-bg: #000;
+      --text-color: #000;
+      --header-color: #1f2937;
+      --clue-header-color: #1f2937;
+      --correct-bg: #d4edda;
+      --incorrect-bg: #f8d7da;
+      --button-check-bg: #2563eb;
+      --button-check-hover: #1d4ed8;
+      --button-clear-bg: #4b5563;
+      --button-clear-hover: #374151;
+    }
+
+    [data-theme="dark"] {
+      --background-gradient: linear-gradient(to bottom right, #1f2937, #111827);
+      --cell-bg: #374151;
+      --cell-border: #4b5563;
+      --blocked-bg: #1f2937;
+      --text-color: #f3f4f6;
+      --header-color: #f3f4f6;
+      --clue-header-color: #f3f4f6;
+      --correct-bg: #34d399;
+      --incorrect-bg: #f87171;
+      --button-check-bg: #3b82f6;
+      --button-check-hover: #2563eb;
+      --button-clear-bg: #6b7280;
+      --button-clear-hover: #4b5563;
+    }
+
+    [data-theme="blue"] {
+      --background-gradient: linear-gradient(to bottom right, #dbeafe, #bfdbfe);
+      --cell-bg: #eff6ff;
+      --cell-border: #93c5fd;
+      --blocked-bg: #1e40af;
+      --text-color: #1e40af;
+      --header-color: #1e40af;
+      --clue-header-color: #1e40af;
+      --correct-bg: #a7f3d0;
+      --incorrect-bg: #fecaca;
+      --button-check-bg: #3b82f6;
+      --button-check-hover: #2563eb;
+      --button-clear-bg: #6b7280;
+      --button-clear-hover: #4b5563;
+    }
+
+    body {
+      background: var(--background-gradient);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Comic Sans MS', 'Arial', sans-serif;
+      color: var(--text-color);
+    }
+    .container {
+      max-width: 800px;
+    }
+    .crossword-grid {
+      display: grid;
+      gap: 2px;
+      background-color: var(--blocked-bg);
+      padding: 2px;
+      margin: 0 auto;
+    }
+    .cell {
+      width: 50px;
+      height: 50px;
+      background-color: var(--cell-bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      text-transform: uppercase;
+      border: 1px solid var(--cell-border);
+    }
+    .cell input {
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      font-size: 20px;
+      text-transform: uppercase;
+      border: none;
+      outline: none;
+      background-color: var(--cell-bg);
+      color: var(--text-color);
+    }
+    .cell.blocked {
+      background-color: var(--blocked-bg);
+    }
+    .cell-number {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      font-size: 12px;
+      color: var(--text-color);
+    }
+    .clues {
+      margin-top: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .clues h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: var(--clue-header-color);
+    }
+    .clues ul {
+      list-style: none;
+      padding: 0;
+    }
+    .clues li {
+      margin-bottom: 5px;
+    }
+    .buttons {
+      margin-top: 20px;
+      text-align: center;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .selector {
+      margin-bottom: 20px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .selector select {
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid var(--cell-border);
+      background-color: var(--cell-bg);
+      color: var(--text-color);
+      font-size: 16px;
+    }
+    .sound-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sound-toggle label {
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #34d399;
+    }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    .score-display {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #d97706;
+    }
+    .score-display span {
+      color: #16a34a;
+    }
+    .welcome-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .welcome-section h1 {
+      font-size: 3rem;
+      color: #db2777;
+      margin-bottom: 20px;
+    }
+    .welcome-section p {
+      font-size: 1.2rem;
+      color: var(--text-color);
+      margin-bottom: 20px;
+    }
+    .start-button {
+      background-color: #16a34a;
+      color: white;
+      padding: 15px 30px;
+      font-size: 1.8rem;
+      border-radius: 12px;
+      font-weight: bold;
+      transition: transform 0.2s, background-color 0.3s;
+      animation: pulse 2s infinite;
+    }
+    .start-button:hover {
+      background-color: #15803d;
+      transform: scale(1.05);
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+    .game-section {
+      display: none;
+    }
+    .game-active .welcome-section {
+      display: none;
+    }
+    .game-active .game-section {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container mx-auto px-4 py-8 text-center">
+    <div class="welcome-section">
+      <h1>Fun Crossword Adventure!</h1>
+      <p>Welcome, young puzzlers! Solve crosswords, earn points, and have fun! Choose your theme, difficulty, and turn on sounds if you like. Click "Start Game" to begin!</p>
+    </div>
+    <div class="score-display">
+      Score: <span id="currentScore">0</span> | High Score: <span id="highScore">0</span>
+    </div>
+    <div class="selector">
+      <div>
+        <label for="theme">Theme: </label>
+        <select id="theme">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="blue">Blue</option>
+        </select>
+      </div>
+      <div>
+        <label for="difficulty">Difficulty: </label>
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </div>
+      <div class="sound-toggle">
+        <label for="sound">Sound:</label>
+        <label class="switch">
+          <input type="checkbox" id="sound">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="welcome-section">
+      <button id="startGame" class="start-button">Start Game</button>
+    </div>
+    <div class="game-section">
+      <div id="crossword" class="crossword-grid"></div>
+      <div class="clues">
+        <div class="across">
+          <h3>Across</h3>
+          <ul id="across-clues"></ul>
+        </div>
+        <div class="down">
+          <h3>Down</h3>
+          <ul id="down-clues"></ul>
+        </div>
+      </div>
+      <div class="buttons">
+        <button id="check" class="text-white px-6 py-2 rounded-lg font-semibold transition" style="background-color: var(--button-check-bg);">Check Answers</button>
+        <button id="clear" class="text-white px-6 py-2 rounded-lg font-semibold transition" style="background-color: var(--button-clear-bg);">Clear Grid</button>
+        <button id="resetScore" class="text-white px-6 py-2 rounded-lg font-semibold transition" style="background-color: #dc2626;">Reset Score</button>
+        <button id="backToHome" class="text-white px-6 py-2 rounded-lg font-semibold transition" style="background-color: #f59e0b;">Back to Home</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="correctSound" src="https://www.royaltyfree-sound.com/sounds/correct-ding.mp3"></audio>
+  <audio id="incorrectSound" src="https://www.royaltyfree-sound.com/sounds/buzzer.mp3"></audio>
+  <audio id="clearSound" src="https://www.royaltyfree-sound.com/sounds/whoosh.mp3"></audio>
+
+  <script>
+    const puzzles = {
+      easy: {
+        gridSize: 4,
+        words: [
+          { number: 1, row: 0, col: 0, word: 'CAT', direction: 'across', clue: 'Furry pet' },
+          { number: 2, row: 0, col: 0, word: 'CUP', direction: 'down', clue: 'Drinking vessel' },
+          { number: 3, row: 2, col: 1, word: 'PEN', direction: 'across', clue: 'Writing tool' }
+        ]
+      },
+      medium: {
+        gridSize: 5,
+        words: [
+          { number: 1, row: 0, col: 0, word: 'HELLO', direction: 'across', clue: 'A friendly greeting' },
+          { number: 2, row: 0, col: 0, word: 'HOUSE', direction: 'down', clue: 'Where you live' },
+          { number: 3, row: 2, col: 1, word: 'LOVE', direction: 'across', clue: 'Deep affection' },
+          { number: 4, row: 1, col: 2, word: 'LEAP', direction: 'down', clue: 'To jump' }
+        ]
+      },
+      high: {
+        gridSize: 6,
+        words: [
+          { number: 1, row: 0, col: 0, word: 'PUZZLE', direction: 'across', clue: 'Brain teaser' },
+          { number: 2, row: 0, col: 0, word: 'PLANET', direction: 'down', clue: 'Celestial body' },
+          { number: 3, row: 2, col: 1, word: 'RIVER', direction: 'across', clue: 'Flowing water' },
+          { number: 4, row: 1, col: 3, word: 'NEST', direction: 'down', clue: 'Bird’s home' },
+          { number: 5, row: 4, col: 2, word: 'STAR', direction: 'across', clue: 'Night sky twinkler' }
+        ]
+      }
+    };
+
+    // Score management
+    let score = parseInt(localStorage.getItem('score')) || 0;
+    let highScore = parseInt(localStorage.getItem('highScore')) || 0;
+    let startTime = Date.now();
+    const currentScoreDisplay = document.getElementById('currentScore');
+    const highScoreDisplay = document.getElementById('highScore');
+    currentScoreDisplay.textContent = score;
+    highScoreDisplay.textContent = highScore;
+
+    function updateScore(points, message) {
+      score += points;
+      if (score < 0) score = 0;
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('highScore', highScore);
+        highScoreDisplay.textContent = highScore;
+      }
+      localStorage.setItem('score', score);
+      currentScoreDisplay.textContent = score;
+      if (message) {
+        alert(message);
+      }
+    }
+
+    function loadPuzzle(difficulty) {
+      startTime = Date.now();
+      const { gridSize, words } = puzzles[difficulty];
+      const grid = Array(gridSize).fill().map(() => Array(gridSize).fill(null));
+      const numberMap = {};
+
+      words.forEach(word => {
+        const { number, row, col, word: answer, direction } = word;
+        for (let i = 0; i < answer.length; i++) {
+          const r = direction === 'across' ? row : row + i;
+          const c = direction === 'across' ? col + i : col;
+          grid[r][c] = { letter: answer[i], number: i === 0 ? number : null };
+          if (i === 0) numberMap[${r}-${c}] = number;
+        }
+      });
+
+      const crosswordDiv = document.getElementById('crossword');
+      crosswordDiv.innerHTML = '';
+      crosswordDiv.style.gridTemplateColumns = repeat(${gridSize}, 50px);
+      for (let r = 0; r < gridSize; r++) {
+        for (let c = 0; c < gridSize; c++) {
+          const cellDiv = document.createElement('div');
+          cellDiv.className = 'cell';
+          if (!grid[r][c]) {
+            cellDiv.className += ' blocked';
+          } else {
+            const input = document.createElement('input');
+            input.maxLength = 1;
+            input.dataset.row = r;
+            input.dataset.col = c;
+            cellDiv.appendChild(input);
+            if (grid[r][c].number) {
+              const numberDiv = document.createElement('div');
+              numberDiv.className = 'cell-number';
+              numberDiv.textContent = grid[r][c].number;
+              cellDiv.appendChild(numberDiv);
+            }
+          }
+          crosswordDiv.appendChild(cellDiv);
+        }
+      }
+
+      const acrossClues = document.getElementById('across-clues');
+      const downClues = document.getElementById('down-clues');
+      acrossClues.innerHTML = '';
+      downClues.innerHTML = '';
+      words.forEach(({ number, clue, direction }) => {
+        const li = document.createElement('li');
+        li.textContent = ${number}. ${clue};
+        if (direction === 'across') {
+          acrossClues.appendChild(li);
+        } else {
+          downClues.appendChild(li);
+        }
+      });
+
+      return grid;
+    }
+
+    // Theme switching
+    const themeSelect = document.getElementById('theme');
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-theme', savedTheme);
+    themeSelect.value = savedTheme;
+
+    themeSelect.addEventListener('change', () => {
+      const selectedTheme = themeSelect.value;
+      document.body.setAttribute('data-theme', selectedTheme);
+      localStorage.setItem('theme', selectedTheme);
+    });
+
+    // Difficulty switching
+    const difficultySelect = document.getElementById('difficulty');
+    const savedDifficulty = localStorage.getItem('difficulty') || 'easy';
+    difficultySelect.value = savedDifficulty;
+
+    // Sound toggle
+    const soundToggle = document.getElementById('sound');
+    const savedSoundState = localStorage.getItem('sound') === 'true';
+    soundToggle.checked = savedSoundState;
+
+    soundToggle.addEventListener('change', () => {
+      localStorage.setItem('sound', soundToggle.checked);
+    });
+
+    function playSound(soundId) {
+      if (soundToggle.checked) {
+        const sound = document.getElementById(soundId);
+        sound.currentTime = 0;
+        sound.play().catch(error => console.error('Sound playback failed:', error));
+      }
+    }
+
+    // Game state
+    let currentGrid = null;
+    const startGameButton = document.getElementById('startGame');
+    const backToHomeButton = document.getElementById('backToHome');
+
+    startGameButton.addEventListener('click', () => {
+      document.body.classList.add('game-active');
+      score = 0;
+      updateScore(0);
+      currentGrid = loadPuzzle(difficultySelect.value);
+      alert('Let’s have fun with your crossword puzzle!');
+      playSound('correctSound'); // Play a sound on game start
+    });
+
+    backToHomeButton.addEventListener('click', () => {
+      document.body.classList.remove('game-active');
+      currentGrid = null;
+      document.getElementById('crossword').innerHTML = '';
+      document.getElementById('across-clues').innerHTML = '';
+      document.getElementById('down-clues').innerHTML = '';
+      playSound('clearSound');
+    });
+
+    difficultySelect.addEventListener('change', () => {
+      const selectedDifficulty = difficultySelect.value;
+      localStorage.setItem('difficulty', selectedDifficulty);
+      if (document.body.classList.contains('game-active')) {
+        score = 0;
+        updateScore(0);
+        currentGrid = loadPuzzle(selectedDifficulty);
+      }
+    });
+
+    // Check answers
+    document.getElementById('check').addEventListener('click', () => {
+      if (!currentGrid) return;
+      let correct = true;
+      let correctLetters = 0;
+      let incorrectLetters = 0;
+      document.querySelectorAll('.cell input').forEach(input => {
+        const r = parseInt(input.dataset.row);
+        const c = parseInt(input.dataset.col);
+        const userLetter = input.value.toUpperCase();
+        const correctLetter = currentGrid[r][c]?.letter;
+        if (userLetter && userLetter !== correctLetter) {
+          correct = false;
+          incorrectLetters++;
+          input.style.backgroundColor = 'var(--incorrect-bg)';
+        } else if (userLetter) {
+          correctLetters++;
+          input.style.backgroundColor = 'var(--correct-bg)';
+        }
+      });
+
+      let points = (correctLetters * 10) - (incorrectLetters * 5);
+      let message = correct ? 'Great job! You solved the puzzle!' : 'Some answers are incorrect. Try again!';
+      if (correct) {
+        const timeTaken = (Date.now() - startTime) / 1000;
+        const maxTime = 300;
+        const timeBonus = Math.max(0, Math.round((1 - timeTaken / maxTime) * 30));
+        points += 50 + timeBonus;
+        message += \n+50 Completion Bonus +${timeBonus} Time Bonus!;
+      }
+      updateScore(points, message);
+      playSound(correct ? 'correctSound' : 'incorrectSound');
+    });
+
+    // Clear grid
+    document.getElementById('clear').addEventListener('click', () => {
+      document.querySelectorAll('.cell input').forEach(input => {
+        input.value = '';
+        input.style.backgroundColor = 'var(--cell-bg)';
+      });
+      playSound('clearSound');
+    });
+
+    // Reset score
+    document.getElementById('resetScore').addEventListener('click', () => {
+      score = 0;
+      highScore = 0;
+      localStorage.setItem('score', score);
+      localStorage.setItem('highScore', highScore);
+      currentScoreDisplay.textContent = score;
+      highScoreDisplay.textContent = highScore;
+      alert('Score reset! Start fresh and have fun!');
+      playSound('clearSound');
+    });
+
+    // Apply hover effects for buttons
+    const checkButton = document.getElementById('check');
+    const clearButton = document.getElementById('clear');
+    const resetScoreButton = document.getElementById('resetScore');
+    const backToHomeButton = document.getElementById('backToHome');
+    checkButton.addEventListener('mouseover', () => {
+      checkButton.style.backgroundColor = 'var(--button-check-hover)';
+    });
+    checkButton.addEventListener('mouseout', () => {
+      checkButton.style.backgroundColor = 'var(--button-check-bg)';
+    });
+    clearButton.addEventListener('mouseover', () => {
+      clearButton.style.backgroundColor = 'var(--button-clear-hover)';
+    });
+    clearButton.addEventListener('mouseout', () => {
+      clearButton.style.backgroundColor = 'var(--button-clear-bg)';
+    });
+    resetScoreButton.addEventListener('mouseover', () => {
+      resetScoreButton.style.backgroundColor = '#b91c1c';
+    });
+    resetScoreButton.addEventListener('mouseout', () => {
+      resetScoreButton.style.backgroundColor = '#dc2626';
+    });
+    backToHomeButton.addEventListener('mouseover', () => {
+      backToHomeButton.style.backgroundColor = '#d97706';
+    });
+    backToHomeButton.addEventListener('mouseout', () => {
+      backToHomeButton.style.backgroundColor = '#f59e0b';
+    });
+    startGameButton.addEventListener('mouseover', () => {
+      startGameButton.style.backgroundColor = '#15803d';
+    });
+    startGameButton.addEventListener('mouseout', () => {
+      startGameButton.style.backgroundColor = '#16a34a';
+    });
+  </script>
+</body>
+</html>
