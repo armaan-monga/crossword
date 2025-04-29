@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <style>
   html, body {
-    height: 100%
+    height: 100%;
     margin: 0;
   }
 
