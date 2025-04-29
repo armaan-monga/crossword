@@ -26,8 +26,7 @@
             border: 1px solid #ccc;
             outline: none;
         }
-        .crossword input:disabled {
-            background-color: #000;
+      
         }
         .clues {
             margin: 30px;
@@ -42,12 +41,7 @@
 <body>
     <h1>Simple Crossword Puzzle</h1>
     <div class="crossword">
-        <!-- Disabled cells for black spaces -->
-        <input type="text" maxlength="1" disabled>
-        <input type="text" maxlength="1" disabled>
-        <input type="text" maxlength="1" disabled>
-        <input type="text" maxlength="1">
-        <input type="text" maxlength="1">
+     
 
         <input type="text" maxlength="1" disabled>
         <input type="text" maxlength="1">
