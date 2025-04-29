@@ -70,17 +70,7 @@
       padding: 2px;
       margin: 0 auto;
     }
-    .cell {
-      width: 50px;
-      height: 50px;
-      background-color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 20px;
-      text-transform: uppercase;
-      border: 1px solid #ccc;
-    }
+    
     .cell input {
       width: 100%;
       height: 100%;
