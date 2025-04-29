@@ -234,10 +234,7 @@
     });
 
     // Clear grid
-    document.getElementById('clear').addEventListener('click', () => {
-      document.querySelectorAll('.cell input').forEach(input => {
-        input.value = '';
-        input.style.backgroundColor = '#fff';
+    
       });
     });
   </script>
