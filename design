@@ -18,10 +18,10 @@
             margin: 20px auto;
         }
         .crossword input {
-            width: 40px;
-            height: 40px;
-            text-align: center;
-            font-size: 18px;
+            width: 60px;
+            height: 30px;
+            text-align: left;
+            font-size: 20px;
             text-transform: uppercase;
             border: 1px solid #ccc;
             outline: none;
@@ -30,12 +30,12 @@
             background-color: #000;
         }
         .clues {
-            margin: 20px;
+            margin: 30px;
         }
         .clue {
             text-align: left;
             max-width: 300px;
-            margin: 5px auto;
+            margin: 10px auto;
         }
     </style>
 </head>
@@ -67,11 +67,6 @@
         <input type="text" maxlength="1" disabled>
         <input type="text" maxlength="1">
 
-        <input type="text" maxlength="1" disabled>
-        <input type="text" maxlength="1">
-        <input type="text" maxlength="1">
-        <input type="text" maxlength="1">
-        <input type="text" maxlength="1">
     </div>
     <div class="clues">
         <h2>Clues</h2>
